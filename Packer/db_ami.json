@@ -20,14 +20,15 @@
       },
       "instance_type": "t2.micro",
       "ssh_username": "ubuntu",
-      "ami_name": "eng74-matt-ami-packer-app4"
+      "ami_name": "eng74-matt-ami-packer-db"
     }
   ],
 
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "/home/ubuntu/playbooks/app_setup.yaml"
+      "playbook_file": "/home/ubuntu/playbooks/db_setup.yaml"
     }
   ]
 }
+
