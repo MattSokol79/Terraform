@@ -88,4 +88,7 @@ output "ip" {
 }
 ```
 
-7. Once the files are created can run `terraform validate <file>` to ensure the file has no errors, if there are none, can either `terraform plan` to see what will happen or apply terraform with `terraform apply` which will build the instances in as little as a minute!
+7. Once the files are created can run `terraform validate` to ensure the file has no errors, if there are none, can either `terraform plan` to see what will happen or apply terraform with `terraform apply` which will build the instances in as little as a minute!
+   
+8. Go to AWS and confirm your instances are created!
+   
