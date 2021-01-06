@@ -29,13 +29,24 @@ resource "aws_instance" "app_instance" {
 	    Name = "eng74-matt-app-terraform-test"
 	}
 	key_name = var.aws_key
+	
+	provisioner "remote-exec" {
+    	host = self.public_ip
+		inline = [
+      		"cd app/",
+      		"sudo DB_HOST=${aws_instance.db_instance.private_ip} pm2 start app.js",
+    ]
+  }
+	depends_on = [ 
+		aws_instance.db_instance,
+	 ]
 } 
 
-output "ip" {
+output "app_ip" {
   value = [aws_instance.app_instance.*.public_ip, aws_instance.app_instance.*.private_ip]
 }
 
-output "ip" {
+output "db_ip" {
   value = [aws_instance.db_instance.*.public_ip, aws_instance.db_instance.*.private_ip]
 }
 
