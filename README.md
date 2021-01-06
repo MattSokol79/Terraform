@@ -92,3 +92,45 @@ output "ip" {
    
 8. Go to AWS and confirm your instances are created!
    
+
+
+
+# Richard Interview Prep
+## How to prepare
+- Client
+  - Make sure you have researched the client
+    - What do they do?
+    - Who is interviewing you?
+    - What are their latest projects?
+  - Have questions ready for the client
+    - What projects are you working on?
+    - Whats the best thing about working for ..
+    - How are your teams structured?
+    - What is your current tech stack?
+  - Why do you want to work for this client????? 
+- Technical
+  - Course & Interview Topics
+    - What? - Virtualisation 
+    - Where? - In the first week of DevOps......
+    - Why? - The reasons we use virtualisation are.....
+    - How to learn these topics? - Spend some time everyday learning
+- Mindset
+  - TMAY - Tell me About Yourself
+    - Whats your story?
+  - What are your goals?
+    - Where do you want to get?
+  - Extras  
+    - What things do you love doing outside of training in your role?
+  - Whats your strategy
+    - How you going to handle the interview 
+- Success Checklist
+  - I have researched the client
+  - I know what the client does
+  - I have found their latest projects
+  - I have questions ready for the client
+  - I know why I want to work for this client
+  - I have time set aside for interview prep every night
+  - I have looked at the What Where Why of my training
+  - I have practiced MY STORY with family
+  - I know why my goals are in this role
+  - I am read to talk about what I love to do
