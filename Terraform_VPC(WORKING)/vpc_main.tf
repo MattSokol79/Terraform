@@ -15,43 +15,6 @@ resource "aws_vpc" "terraform_vpc" {
 	}
 }
 
-# VPC Security Group
-resource "aws_security_group" "terraform_VPC_SG" {
-	vpc_id = aws_vpc.terraform_vpc.id
-
-	ingress {
-		from_port = 22
-		to_port = 22
-		protocol = "tcp"
-		cidr_blocks = ["84.69.118.155/32"]
-	}
-
-	ingress {
-		from_port = 80
-		to_port = 80
-		protocol = "tcp"
-		cidr_blocks = ["0.0.0.0/0"]
-	}
-	
-	ingress {
-		from_port = 443
-		to_port = 443
-		protocol = "tcp"
-		cidr_blocks = ["0.0.0.0/0"]
-	}
-
-    egress {
-		from_port = 0
-		to_port = 0
-		protocol = "-1"
-		cidr_blocks = ["0.0.0.0/0"]
-	}
-
-	tags = {
-		Name = "eng74-matt-terraform-VPC-SG"
-	}
-}
-
 # Public Subnet
 resource "aws_subnet" "terraform_public_subnet" {
 	vpc_id = aws_vpc.terraform_vpc.id
@@ -90,7 +53,7 @@ resource "aws_route_table" "terraform_route_table_public" {
 	}	
 }
 
-# Associating Route Table
+# Associating Route Table PUBLIC
 resource "aws_route_table_association" "terraform_rta_public" {
 	subnet_id = aws_subnet.terraform_public_subnet.id
 	route_table_id = aws_route_table.terraform_route_table_public.id
@@ -178,7 +141,7 @@ resource "aws_route_table" "terraform_route_table_private" {
 	}
 }
 
-# Route table association
+# Route table association PRIVATE
 resource "aws_route_table_association" "terraform_rta_private"{
 	subnet_id = aws_subnet.terraform_private_subnet.id
 	route_table_id = aws_route_table.terraform_route_table_private.id
@@ -241,8 +204,9 @@ resource "aws_network_acl" "terraform_priv_NACL" {
 }
 
 #################################
-# Creating the App and DB instances
+# INSTANCES
 
+# Creating the DB EC2 Instance
 resource "aws_instance" "db_instance" {
 	
 	ami = var.ami_db
@@ -251,46 +215,12 @@ resource "aws_instance" "db_instance" {
     vpc_security_group_ids = [aws_security_group.terraform_VPC_SG.id]
 	subnet_id = aws_subnet.terraform_private_subnet.id
 	tags = {
-	    Name = "eng74-matt-db-terraform-test2"
+	    Name = "eng74-matt-db-terraform"
 	}
 	key_name = var.aws_key
 } 
 
-resource "aws_security_group" "sg_db" {
-  name = "eng74-matt-terraform-db3"
-  vpc_id = aws_vpc.terraform_vpc.id
-  description = "A security group for the DB instance"
-
-  ingress {
-    description = "For the MongoDB communication"
-    from_port = 27017
-    to_port = 27017
-    protocol = "tcp"
-    # Terraform App instance private ip
-    cidr_blocks = ["0.0.0.0/0"]
-   }
-
-  ingress {
-    description = "SSH from nodejs_app_instance"
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-     # SSHing from the controller or my ip
-    cidr_blocks = ["84.69.118.155/32"]
-   }
-
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-      Name = "eng74-matt-terraform-sg-db"
-  }
-}
-
+# Creating the App EC2 Instance in the VPC
 resource "aws_instance" "app_instance" {
 	
 	ami = var.ami_app
@@ -300,7 +230,7 @@ resource "aws_instance" "app_instance" {
 	vpc_security_group_ids = [aws_security_group.terraform_VPC_SG.id]
 	subnet_id = aws_subnet.terraform_public_subnet.id
     tags = {
-	    Name = "eng74-matt-app-terraform-test2"
+	    Name = "eng74-matt-app-terraform"
 	}
 	key_name = var.aws_key
 	depends_on = [ 
@@ -313,65 +243,7 @@ resource "aws_instance" "app_instance" {
         EOF
 } 
 
-
-resource "aws_security_group" "sg_app" {
-  name = "eng74-matt-terraform-app3"
-  vpc_id = aws_vpc.terraform_vpc.id
-  description = "A security group for the app instance"
-
-  ingress {
-    description = "HTTP for updates"
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "SSH from nodejs_app_instance"
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    # SSHing from my ip
-    cidr_blocks = ["84.69.118.155/32"]
-  }
-
-  ingress {
-    description = "Database receieve"
-    from_port = 27017
-    to_port = 27017
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "HTTPS for updates"
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "Port 3000"
-    from_port = 3000
-    to_port = 3000
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-   }
-
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-      Name = "eng74-matt-terraform-sg-app"
-  }
-}
-
+# Showing the App and DB instance IPs 
 output "app_ip" {
   value = [aws_instance.app_instance.*.public_ip, aws_instance.app_instance.*.private_ip]
 }

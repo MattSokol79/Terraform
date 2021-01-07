@@ -92,6 +92,8 @@ output "ip" {
    
 8. Go to AWS and confirm your instances are created!
    
+# VPC Creation using Terraform
+Navigate to the `vpc_main.tf` file to see all of the code required to build a vpc with relevant security as well as the app and db instances within. 
 
 
 
